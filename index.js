@@ -6,8 +6,13 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*", // Allow all origins, or limit to your Expo IP during testing
+    origin: "*",
   },
+});
+
+// Root route to prevent "Cannot GET /"
+app.get("/", (req, res) => {
+  res.send("Chat server is running!");
 });
 
 io.on("connection", (socket) => {
@@ -15,7 +20,7 @@ io.on("connection", (socket) => {
 
   socket.on("message", (msg) => {
     console.log("Message received:", msg);
-    io.emit("message", msg); // Broadcast to all clients
+    io.emit("message", msg);
   });
 
   socket.on("disconnect", () => {
